@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-// build: 2013-12-23
+// build: 2014-01-12
 // Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -394,12 +394,17 @@
         define(["eve"], function( eve ) {
             return factory(glob, eve);
         });
+    } else if (typeof exports !== 'undefined') {
+        // Next for Node.js or CommonJS
+        var eve = require('eve');
+        module.exports = factory(glob, eve);
     } else {
         // Browser globals (glob is window)
         // Snap adds itself to window
         factory(glob, glob.eve);
     }
-}(this, function (window, eve) {
+}(window || this, function (window, eve) {
+
 // Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -760,7 +765,7 @@ var mina = (function (eve) {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var Snap = (function() {
+var Snap = (function(root) {
 Snap.version = "0.2.0";
 /*\
  * Snap
@@ -798,8 +803,8 @@ Snap.toString = function () {
 };
 Snap._ = {};
 var glob = {
-    win: window,
-    doc: window.document
+    win: root.window,
+    doc: root.window.document
 };
 Snap._.glob = glob;
 var has = "hasOwnProperty",
@@ -4391,7 +4396,8 @@ Snap.plugin = function (f) {
 };
 glob.win.Snap = Snap;
 return Snap;
-}());
+}(window || this));
+
 // Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
